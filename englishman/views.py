@@ -13,7 +13,7 @@ from collections import Counter
 
 def five_noun(html_text, num=7):
     soup = BeautifulSoup(html_text, 'html.parser')
-    text = str(soup.get_text())
+    text = str(soup.get_text().replace('\xa0', ''))
     doc = nlp(text)
     # all tokens that arent stop words or punctuations
     words = [(token.lemma_).lower()

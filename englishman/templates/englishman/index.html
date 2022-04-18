@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+<div class="col-lg-3"></div>
+
+<div class="col-lg-6">
+    {% if form %}
+    <form method="POST" class="p-2">
+        <div class="p">
+            <p><i>This is Good for getting most used keywords from any html</i></p>
+            <p><i>I have used this in <a href="https://vizvasrj.com">vizvasrj.com</a></i></p>
+            <p><i><bold>Note</bold> it best works with english texts. beacuse of spacy english module</i></p>
+        </div>
+        <div class="border">
+            <label class="p-2" for="text">Enter HTML</label>
+                <div class="grow-wrap p-2">
+                    <textarea class="p-2" name="text" rows="10" id="id_text" onInput="this.parentNode.dataset.replicatedValue = this.value"></textarea>
+                </div>
+        </div>
+        <div class="border">
+            <label class="p-2" for="num">Enter positive number only</label>
+            <div class="p-2">
+                <input style="width: 100%;" class="p-2" type="number" name="num" required="" id="id_num" min="1" max="5">
+            </div>
+        </div>
+        {% csrf_token %}
+    
+        
+    
+        <input class="p-2 btn btn-primary" style="width: 100%;" type="submit" value="Submit">
+        
+    </form>
+    {% endif %}
+    
+    
+    {% for word in words %}
+        <div class=" p-1 {% cycle 'bg-primary' 'bg-danger' %}">{{word}}</div>
+    {% endfor %}
+</div>
+<div class="col-lg-3"></div>
+    
+</div>
+{% endblock %}
+
+
+{% block style %}	
+.grow-wrap {
+    /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
+    display: grid;
+  }
+  
+  .grow-wrap::after {
+    /* Note the weird space! Needed to preventy jumpy behavior */
+    content: attr(data-replicated-value) " ";
+    /* This is how textarea text behaves */
+    white-space: pre-wrap;
+    /* Hidden from view, clicks, and screen readers */
+    visibility: hidden;
+  }
+  
+  .grow-wrap>textarea {
+    /* You could leave this, but after a user resizes, then it ruins the auto sizing */
+    resize: none;
+    /* Firefox shows scrollbar on growth, you can hide like this. */
+    overflow: hidden;
+  }
+  
+  .grow-wrap>textarea,
+  .grow-wrap::after {
+    /* Identical styling required!! */
+    border: 1px solid black;
+    padding: 0.5rem;
+    font: inherit;
+    /* Place on top of each other */
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  
+.p{
+    line-height: 3px;
+}
+
+{% endblock %}

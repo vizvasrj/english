@@ -1,5 +1,5 @@
-
-# Create your views here.
+from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import status
 from django.contrib.auth.models import User
@@ -10,6 +10,8 @@ import spacy
 nlp = spacy.load('en_core_web_sm')
 from bs4 import BeautifulSoup
 from collections import Counter
+
+from .forms import CommonWordsForm
 
 def five_noun(html_text, num=7):
     soup = BeautifulSoup(html_text, 'html.parser')
@@ -69,3 +71,52 @@ class EnglishView(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+def common_words_view(request):
+    if request.method == 'POST':
+        form = CommonWordsForm(
+            request.POST
+        )
+        if form.is_valid():
+            cd = form.cleaned_data
+            text = cd['text']
+            num = cd['num']
+            words = five_noun(text, num=num)
+            return render(
+                request,
+                'englishman/index.html', {
+                    'words': [word[0] for word in words]
+                }
+            )
+    else:
+        form = CommonWordsForm(request.POST)
+    # print(text)
+    return render(
+        request,
+        'englishman/index.html', {
+            'form': form
+        }
+    )
+
+
+
+
+
+def about(request):
+    return render(
+        request,
+        'englishman/about.html', {
+            
+        }
+    )
+
+
+def api_doc(request):
+    html = '<p>Some long string text You need summary for</p>'
+    return render(
+        request,
+        'englishman/apidoc.html', {
+            'html': html,
+        }
+    )
